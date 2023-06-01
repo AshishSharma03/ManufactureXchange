@@ -1,12 +1,148 @@
-import { Box, Button,CheckBox ,FormControlLabel, FormGroup, Input, Stack, Typography } from "@mui/material";
-import React from "react";
+import {
+  Box,
+  Button,
+  CheckBox,
+  FormControlLabel,
+  FormGroup,
+  InputAdornment,
+  IconButton,
+  Input,
+  Stack,
+  Typography,
+  Alert,
+  TextField,
+} from "@mui/material";
+import React, { useState } from "react";
 import Link from "../muiSrc/LInk";
-import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { AddUser } from "../Redux/Users/MenufectureuserSlice";
+import { nanoid } from "nanoid";
+import axios from "axios";
 
-
+const USERTYPE = {
+  MENUFECTURE :"Menufecture",
+  TRANSPORTER : "Transporter"
+}
 
 function SignUp() {
+  const [FirstName, setFirstName] = useState();
+
+  const [LastName, setLastName] = useState();
+  const [Email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [ConfirmPass, setConfirmPass] = useState();
+  const [errorMsg,setErrorMsg] = useState('')
+  const [error,setError] = useState(false)
+  const [passVisibility, setPassVisibility] = useState(false);
+  const [ConpassVisibility, setConPassVisibility] = useState(false);
+  const [AddressInput, setAddressInput] = useState(false);
+  const [state,setState ] = useState();
+  const [city,setCity ] = useState();
+  const [Country,setCountry ] = useState();
+  const [pinCode,setPinCode ] = useState();
+  const [Address,setAddress ] = useState();
+  const [Order,setOrder ] = useState([]);
+  const [userType,setUserType ] = useState(USERTYPE.MENUFECTURE);
+  const router = useRouter()
+  const [userID , setUserId] = useState("")
+  // const dispatch = useDispatch();
+
+  const SendDataTodb = async () =>{
+
+    const NewUser =  {
+      FirstName : FirstName,
+      LastName : LastName,
+      Email : Email,
+      password : password,
+      Address : Address,
+      state : state, 
+      pinCode : pinCode,
+      city : city ,
+      order: Order,
+      userType: userType
+
+    }
+    try{
+
+      const res = await axios.post("/api/userRegister",NewUser)
+      if(res.status === 200){
+        setUserId(res.data.userId)
+        return true
+      }
+    }
+    catch(error){
+        if(error.response && error.response.status ){
+          setErrorMsg("Email is Already exist")
+          setError(true)
+          setAddressInput(false)
+        } 
+    }
+
+    return false 
+
+  }
+
+
+
+
+const FinalStepHandle =  async ()=>{
+  if(state && city && Country && pinCode && Address){
+
+    setError(false)   
+    const userRegisterd = await SendDataTodb()
+    if(userRegisterd){
+      router.push('/Login')
+    }
+  }else{
+    setErrorMsg("fill all address field")
+    setError(true)
+  }
+}
+
   
+  const SignInHandle = async () =>{
+    var Ere = /\S+@\S+\.\S+/;
+    let pass = /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).{8,16}$/;
+    if(FirstName && LastName && Email && password && ConfirmPass){
+             
+          if(Email.match(Ere)){
+            setError(false)
+                if(password.match(pass)){
+                  setError(false)
+                    if(ConfirmPass.match(password)){
+                      setError(false)
+                      
+                       setAddressInput(true)
+                    
+
+                    }else{
+                      setErrorMsg("Password not match")
+                      setError(true)
+                    }
+
+                }else{
+
+                  setErrorMsg("Password  must 8 to 16 characters which contain at least one numeric digit, one uppercase and one lowercase letter and  one Special Symbol.")
+                  setError(true)
+                }
+            
+          }else{
+            
+            setErrorMsg("Email not valid")
+            setError(true)
+          }
+
+    }else{
+
+      setErrorMsg("Please fill the all field")
+      setError(true)
+    }
+  
+  }
 
   return (
     <Box
@@ -17,76 +153,203 @@ function SignUp() {
         alignItems: "center",
         flexDirection: "column",
       }}
-    > 
-      <Stack sx={{width:"300px"}} gap={2}>
-      
-      <Typography sx={{fontSize:"20px",fontWeight:"700"}}>Sign Up</Typography>
-      <Stack direction={"column"}  gap={1} sx={{border:'2px solid #43CF8C',padding:"10px",borderRadius:"5px"}}>
-      <Typography sx={{fontSize:"12px",fontWeight:"700",color:"#616161"}}>Tap on to change your bussiness </Typography>
-      <Stack  direction={"row"}>
-            <Button fullWidth sx={{gap:1,fontWeight:"700"}}>
-                Manufacturer
-                <CheckCircleOutlineRoundedIcon/>
+    >
+      <Stack sx={{ width: "300px" }} gap={2}>
+        <Typography sx={{ fontSize: "20px", fontWeight: "700" }}>
+          Sign Up
+        </Typography>
+        <Alert 
+        sx={{display:error?"stack":"none"}}
+        severity="error"
+        >
+          {errorMsg}
+        </Alert>
+        <Stack
+          direction={"column"}
+          gap={1}
+          sx={{
+            border: "2px solid #43CF8C",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
+        > 
+          <Typography
+            sx={{ fontSize: "12px", fontWeight: "700", color: "#616161" }}
+          >
+            Tap on to change your bussiness{" "}
+          </Typography>
+          <Stack direction={"row"}>
+            <Button fullWidth onClick={()=>{setUserType(USERTYPE.MENUFECTURE)}} sx={{color: userType === USERTYPE.MENUFECTURE? "": "#ccc" ,gap: 1, fontWeight: "700" }}>
+              Manufacturer
+              { userType === USERTYPE.MENUFECTURE ? <CheckCircleOutlineRoundedIcon />
+              :""
+              }
             </Button>
-            <Button fullWidth sx={{color:"#ccc",gap:1,fontWeight:"700"}}>
-                Transporter 
-                </Button>
-        </Stack> 
-      </Stack>
-      <Input
+            <Button fullWidth onClick={()=>{setUserType(USERTYPE.TRANSPORTER)}} sx={{ color: userType === USERTYPE.TRANSPORTER? "": "#ccc" , gap: 1, fontWeight: "700" }}>
+              Transporter
+              { userType === USERTYPE.TRANSPORTER ?<CheckCircleOutlineRoundedIcon />
+              :""
+              }
+            </Button>
+          </Stack>
+
+        </Stack>
+        <Stack gap={1} sx={{display:AddressInput?"flex":"none"}}>
+        <Input
           disableUnderline
           type="text"
-          sx={{ 
-            background: "#F3F3F3", 
+          sx={{
+            background: "#F3F3F3",
             padding: "10px 20px",
-            borderRadius:"5px" }}
-          placeholder="First Name"
+            borderRadius: "5px",
+          }}
+          placeholder="State" 
+          onChange={(e)=>{setState(e.target.value)}}
         />
-         <Input
+        <Input
           disableUnderline
           type="text"
-          sx={{ 
-            background: "#F3F3F3", 
+          sx={{
+            background: "#F3F3F3",
             padding: "10px 20px",
-            borderRadius:"5px" }}
+            borderRadius: "5px",
+          }}
+          placeholder="city" 
+          onChange={(e)=>{setCity(e.target.value)}}
+        /><Input
+        disableUnderline
+        type="text"
+        sx={{
+          background: "#F3F3F3",
+          padding: "10px 20px",
+          borderRadius: "5px",
+        }}
+        placeholder="Country" 
+        onChange={(e)=>{setCountry(e.target.value)}}
+      />
+      <Input
+        disableUnderline
+        type="text"
+        sx={{
+          background: "#F3F3F3",
+          padding: "10px 20px",
+          borderRadius: "5px",
+        }}
+        placeholder="Pin Code" 
+        onChange={(e)=>{setPinCode(e.target.value)}}
+      />  
+       <Input
+       multiline
+       disableUnderline
+       rows={3}
+        type="text"
+        sx={{
+          background: "#F3F3F3",
+          padding: "10px 20px",
+          borderRadius: "5px",
+        }}
+        placeholder="Ex : A16, Block A, Sector A.." 
+        onChange={(e)=>{setAddress(e.target.value)}}
+        />  
+        </Stack>
+         <Stack gap={1} sx={{display:!AddressInput?"flex":"none"}}>
+        <Input
+          disableUnderline
+          type="text"
+          sx={{
+            background: "#F3F3F3",
+            padding: "10px 20px",
+            borderRadius: "5px",
+          }}
+          placeholder="First Name" 
+          onChange={(e)=>{setFirstName(e.target.value)}}
+        />
+        <Input
+          disableUnderline
+          type="text"
+          sx={{
+            background: "#F3F3F3",
+            padding: "10px 20px",
+            // border:"2px solid red",
+            // boxShadow:"0px 0px 5px 5px rgba(255,0,0,0.1)",
+            borderRadius: "5px",
+          }}
           placeholder="Last Name"
+          onChange={(e)=>{setLastName(e.target.value) }}
         />
         <Input
           disableUnderline
           type="email"
-          sx={{ 
-            background: "#F3F3F3", 
+          sx={{
+            background: "#F3F3F3",
             padding: "10px 20px",
-            borderRadius:"5px" }}
+            borderRadius: "5px",
+          }}
           placeholder="Example@email.com"
+          onChange={(e)=>{setEmail(e.target.value)}}
         />
         <Input
           disableUnderline
-          type="password"
-          sx={{ 
-            background: "#F3F3F3", 
-            padding: "10px 20px",
-            borderRadius:"5px" }}
+          type={passVisibility?"text":"password"}
+          sx={{
+            background: "#F3F3F3",
+            padding: "10px 5px 10px 20px",
+            borderRadius: "5px",
+          }}
           placeholder="Password"
+          endAdornment={
+            <InputAdornment>
+              <IconButton onClick={()=>{setPassVisibility(!passVisibility)}}>
+                 {passVisibility?
+                  <VisibilityOutlinedIcon/>
+                :
+                <VisibilityOffOutlinedIcon/> }
+              </IconButton>
+            </InputAdornment>
+          }
+          onChange={(e)=>{setPassword(e.target.value)}}
         />
         <Input
           disableUnderline
-          type="password"
-          sx={{ 
-            background: "#F3F3F3", 
-            padding: "10px 20px",
-            borderRadius:"5px" }}
+          type={ConpassVisibility?"text":"password"}
+          sx={{
+            background: "#F3F3F3",
+            padding: "10px 5px 10px 20px",
+            borderRadius: "5px",
+          }}
           placeholder="Confirm Password"
+          endAdornment={
+            <InputAdornment>
+              <IconButton onClick={()=>{setConPassVisibility(!ConpassVisibility)}}>
+                 {ConpassVisibility?
+                  <VisibilityOutlinedIcon/>
+                :
+                <VisibilityOffOutlinedIcon/> }
+              </IconButton>
+            </InputAdornment>
+          }
+          onChange={(e)=>{setConfirmPass(e.target.value)}}
         />
-        <Stack direction={"row"}>
-
-        <span style={{flex:1}} />
-        <Link href="/">Forget Password?</Link>
-        </Stack>
-        <Button variant="contained" sx={{boxShadow:"none",color:"#fff",padding:"10px"}} >Sign in</Button>
+  </Stack> 
+        <Button
+          variant="contained"
+          sx={{ boxShadow: "none", color: "#fff", padding: "10px" ,display:!AddressInput?"block":"none" }}
+          onClick={SignInHandle}
+        >
+          Sign in step 1
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ boxShadow: "none", color: "#fff", padding: "10px",display:AddressInput?"block":"none"}}
+          onClick={FinalStepHandle}
+        >
+          Sign in step 2
+        </Button>
         <Stack direction={"row"} gap={1}>
-        <Typography sx={{color:"#ccc"}}>Already have an account,</Typography>
-        <Link href="/Login" >Log in</Link>
+          <Typography sx={{ color: "#ccc" }}>
+            Already have an account,
+          </Typography>
+          <Link href="/Login">Log in</Link>
         </Stack>
       </Stack>
     </Box>

@@ -5,7 +5,6 @@ export default function Index() {
   const router = useRouter();
   const [userLoggedIn,setUserLoggedIn] = useState(false) 
   useEffect(() => {
-    // const userLoggedIn = // Check if the user is logged in
 
     if (userLoggedIn) {
       router.push('/Landing');
