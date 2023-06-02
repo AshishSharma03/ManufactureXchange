@@ -53,7 +53,6 @@ export default function DataGrid({ data, addOrderButton }) {
   const paginatedRows = sortedData.slice(startIndex, endIndex);
 
   const handleRowClick = (row) => {
-    console.log('Row clicked:', row._id);
     router.push(`/Order/${row._id}`);
   };
 

@@ -90,8 +90,8 @@ function Landing() {
     useEffect(()=>{
       // console.log(userData._id)
       
-      data.filter(item => console.log(item.ManufectureID === userData._id));
-      data.filter(item => console.log(item.TransporterUser === userData._id));
+      // data.filter(item => console.log(item.ManufectureID === userData._id));
+      // data.filter(item => console.log(item.TransporterUser === userData._id));
       const MUfilteredData = data.filter(item => item.ManufectureID === userData._id);
       const TUfilteredData = data.filter(item => item.TransporterUser === userData._id);
       setMenufectureData(MUfilteredData)
@@ -110,7 +110,8 @@ function Landing() {
     setOrderId("#"+generatedOrderID)
     setAddOrder(true)
     setTransporter(FilterTransporters)
-    console.log(userData)
+  
+    
     if(userData){
 
       setpinCode(userData.pinCode)
@@ -121,7 +122,7 @@ function Landing() {
 
   }
 
-console.log(data)
+
 
   return (
     <>

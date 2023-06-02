@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar'
-import { Box, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, Input, Stack, Typography } from '@mui/material'
+import { useRouter } from 'next/router'
+import axios from 'axios'
 
 const DataBox = ({lebel,value,direction="row"}) =>{
   return(
@@ -12,21 +14,61 @@ const DataBox = ({lebel,value,direction="row"}) =>{
   )
 }
 
-function ShowOrder() {
+function ShowOrder({OrderDetail,Menufecture,Transporter,userType}) {
+  const router = useRouter()
+  const [cost ,setCost]= useState(0)
+  const [Update ,setUpdate]= useState(false)
+  // console.log(OrderDetail)
+
+  useEffect(()=>{
+      if(OrderDetail){
+        setCost(OrderDetail.cost)
+      }
+  },[OrderDetail])
+  const onUpdateCost = async() =>{
+    const OrderID = OrderDetail?._id
+    console.log(OrderID)
+    try{
+
+      const res = await axios.put(`/api/UpdateOrderByID?id=${OrderID}`,{
+        cost
+      });
+      if(res.status === 200){
+          setUpdate(true)
+      }
+
+    }catch(error){
+      console.log(error)
+    }
+
+
+  }
+
   return (
-    <Box sx={{background:"",minHeight:"80vh",padding:"10px"}}>
+    <Box sx={{background:"",minHeight:"80vh",padding:"10px",position:"relative",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column"}}>
       <Stack gap={2} sx={{padding:"10px"}}>
-      <DataBox lebel={"Id"} value={"#1w12"} />
-      <DataBox lebel={"To"} value={"1w12"} />
-      <DataBox lebel={"From"} value={"1w12"} />
-      <DataBox lebel={"Quantity"} value={"1w12"} />
-      <DataBox lebel={"Address"} value={"1w12"} direction={"column"} />
-      <DataBox lebel={"Transporter"} value={"1w12"} />
-      <DataBox lebel={"Created date"} value={"1w12"} />
-      <DataBox lebel={"Accept by Transporter"} value={"1w12"} />
-      <DataBox lebel={"Recived"} value={"1w12"} />
-      <DataBox lebel={"Transport Cost"} value={"1w12"} />
+      <DataBox lebel={"Id"} value={OrderDetail?.OrderID} />
+      <DataBox lebel={"To"} value={OrderDetail?.To} />
+      <DataBox lebel={"From"} value={OrderDetail?.From} />
+      <DataBox lebel={"Quantity"} value={OrderDetail?.Quantity} />
+      <DataBox lebel={"Address"} value={OrderDetail?.Address} direction={"column"} />
+      <DataBox lebel={"Menufecture"} value={Menufecture?Menufecture:""} />
+      <DataBox lebel={"Transporter"} value={Transporter?Transporter:""} />
+      <DataBox lebel={"Created date"} value={OrderDetail?.createdAt} />
+      <DataBox lebel={"Transport Cost"} value={cost+" "+"Rs/-"} />
+      {/* <DataBox lebel={"Recived"} value={"1w12"} /> */}
       </Stack>
+      <Alert sx={{display:Update?"flex":"none",position:"absolute" ,top:"20px"}} onClick={()=>{setUpdate(false)}}>
+        Cost Update to {cost}Rs/-
+      </Alert>
+      <Box sx={{display:userType === "Menufecture" ?"none":"flex"}}>
+          
+          <Input 
+            value={cost}
+            onChange={(e)=>{setCost(e.target.value)}}
+          />
+          <Button onClick={onUpdateCost}>Update Cost </Button>
+      </Box>
     </Box>
   )
 }
