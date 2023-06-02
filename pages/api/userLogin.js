@@ -1,4 +1,4 @@
-import CargoUser from "../../model/MenufectureUserSchema";
+import CargoUser from "../../model/CargoUserSchema";
 import { signToken } from "../../utiles/auth";
 import dbConnect from "../../utiles/db";
 import bcrypt from 'bcryptjs';

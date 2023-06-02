@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { signToken } from '../../utiles/auth';
 import bcrypt from 'bcryptjs';
 import dbConnect from '../../utiles/db';
-import CargoUser from '../../model/MenufectureUserSchema';
+import CargoUser from '../../model/CargoUserSchema';
 
 
 export default async function createCargoUser(req, res) {
