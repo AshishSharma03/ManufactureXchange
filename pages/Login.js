@@ -6,6 +6,8 @@ import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined
 import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "../muiSrc/Link";
+import { useDispatch } from "react-redux";
+import {  addUser, login } from "../Redux/Users/User";
 
 
 function LogIn() {
@@ -15,6 +17,8 @@ function LogIn() {
   const [ErrorMsg ,setErrorMsg]= useState("")
   const [Error ,setError]= useState(false)
   const router = useRouter()
+  const dispatch = useDispatch()
+
   const onLoginHandle = async()=>{
     if(Email && password){
       setError(false)
@@ -24,8 +28,12 @@ function LogIn() {
           Email : Email,
           password : password
         })
-        if(res.status){
-          router.push('/Landing')
+       const userdata = res.data
+      
+        if(res.status === 200){
+          dispatch(addUser(userdata))
+          dispatch(login())
+          router.push('/')
         }
       }catch(error){
           if(error.response && error.response.status === 401 ){

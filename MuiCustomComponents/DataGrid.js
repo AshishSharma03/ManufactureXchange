@@ -8,7 +8,7 @@ export default function DataGrid({ data, addOrderButton }) {
   const [sortOrder, setSortOrder] = useState('asc');
   const [searchOrderId, setSearchOrderId] = useState('');
   const [searchDate, setSearchDate] = useState('');
-  const router = useRouter()
+  const router = useRouter();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -35,16 +35,16 @@ export default function DataGrid({ data, addOrderButton }) {
   };
 
   const filteredData = data.filter((row) => {
-    const orderIdMatch = row.id.toString().includes(searchOrderId);
-    const dateMatch = searchDate ? row.createdDate.includes(searchDate) : true;
+    const orderIdMatch = row.OrderID.includes(searchOrderId);
+    const dateMatch = searchDate ? row.createdAt.includes(searchDate) : true;
     return orderIdMatch && dateMatch;
   });
 
   const sortedData = [...filteredData].sort((a, b) => {
     if (sortOrder === 'asc') {
-      return new Date(a.createdDate) - new Date(b.createdDate);
+      return new Date(a.createdAt) - new Date(b.createdAt);
     } else {
-      return new Date(b.createdDate) - new Date(a.createdDate);
+      return new Date(b.createdAt) - new Date(a.createdAt);
     }
   });
 
@@ -53,15 +53,13 @@ export default function DataGrid({ data, addOrderButton }) {
   const paginatedRows = sortedData.slice(startIndex, endIndex);
 
   const handleRowClick = (row) => {
-
-    console.log('Row clicked:', row.id);
-    router.push(`/Order/${row.id}`);
-
+    console.log('Row clicked:', row._id);
+    router.push(`/Order/${row._id}`);
   };
 
   return (
     <div>
-      <Stack direction={"row"} gap={1} alignItems={"center"}>
+      <Stack direction="row" gap={1} alignItems="center">
         <TextField
           label="Search by Order ID"
           value={searchOrderId}
@@ -75,7 +73,7 @@ export default function DataGrid({ data, addOrderButton }) {
           onChange={handleSearchDate}
           style={{ marginBottom: '1rem' }}
         />
-        <span sx={{ flex: 1 }} />
+        <span style={{ flex: 1 }} />
         {addOrderButton}
       </Stack>
 
@@ -84,22 +82,22 @@ export default function DataGrid({ data, addOrderButton }) {
           <TableHead>
             <TableRow>
               <TableCell>Order ID</TableCell>
-              <TableCell>Order Name</TableCell>
-              <TableCell>
-                <span onClick={handleSort} style={{ cursor: 'pointer' }}>
-                  Days {sortOrder === 'asc' ? <>&#9660;</> : <>&#9650;</>}
-                </span>
-              </TableCell>
-              <TableCell>Received</TableCell>
+              <TableCell>To</TableCell>
+              <TableCell>From</TableCell>
+              <TableCell>Quantity</TableCell>
+              <TableCell>Cost</TableCell>
+              <TableCell>Created At</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedRows.map((row) => (
-              <TableRow key={row.id} onClick={() => handleRowClick(row)} style={{ cursor: 'pointer' }} hover>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.column1}</TableCell>
-                <TableCell>{row.createdDate}</TableCell>
-                <TableCell>{row.column3 ? 'Yes' : 'No'}</TableCell>
+              <TableRow key={row._id} onClick={() => handleRowClick(row)} style={{ cursor: 'pointer' }} hover>
+                <TableCell>{row.OrderID}</TableCell>
+                <TableCell>{row.To}</TableCell>
+                <TableCell>{row.From}</TableCell>
+                <TableCell>{row.Quantity}</TableCell>
+                <TableCell>{row.cost}</TableCell>
+                <TableCell>{row.createdAt}</TableCell>
               </TableRow>
             ))}
           </TableBody>

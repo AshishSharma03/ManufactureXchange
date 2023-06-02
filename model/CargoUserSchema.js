@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const CargoUserSchema = new mongoose.Schema({
   FirstName: { type: String, required: true },
