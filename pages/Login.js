@@ -5,7 +5,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import axios from "axios";
 import { useRouter } from "next/router";
-import Link from "../muiSrc/LInk";
+import Link from "../muiSrc/Link";
 
 
 function LogIn() {

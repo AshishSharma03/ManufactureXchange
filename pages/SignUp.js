@@ -20,7 +20,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import axios from "axios";
-import Link from "../muiSrc/LInk";
+import Link from "../muiSrc/Link";
 
 const USERTYPE = {
   MENUFECTURE :"Menufecture",
