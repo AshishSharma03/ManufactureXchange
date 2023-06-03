@@ -15,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import DataGrid from "../MuiCustomComponents/DataGrid";
 import CreateOrder from "../Components/CreateOrder";
 import Navbar from "../Components/Navbar";
@@ -142,7 +143,7 @@ function Landing() {
 
   return (
     <>
-      <Navbar userName={userData ? userData.FirstName : ""} lastName={userData ? userData.LastName : ""} />
+      <Navbar userName={userData ? userData.FirstName : ""} lastName={userData ? userData.LastName : ""}  userType={userData ? userData.userType : ""}/>
 
     <Box sx={{display:userData?.userType === USERTYPE.MENUFECTURE?"Block":"none" }}>
       <Box sx={{ padding: "20px", display: AddOrder ? "none" : "block" }}>
@@ -152,8 +153,15 @@ function Landing() {
             <Button
               variant="contained"
               onClick={onCreateOrder}
+              sx={{boxShadow:"none",color:"#fff",borderRadius:"20px",display:"flex",flexDirection:"row",gap:1,padding:"10px 10px"}}
             >
+             <Typography>
+
               Create Order
+             </Typography>
+              
+              <AddCircleRoundedIcon />
+            
             </Button>
           }
         />

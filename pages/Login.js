@@ -8,8 +8,7 @@ import Link from "../muiSrc/Link";
 import { useDispatch } from "react-redux";
 import {  addUser, login } from "../Redux/Users/User";
 import LoadingScreen from "../Components/LoadingScreen";
-
-
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 function LogIn() {
   const [passVisibility, setPassVisibility] = useState(false);
   const [Email,setEmail]= useState()
@@ -18,7 +17,8 @@ function LogIn() {
   const [Error ,setError]= useState(false)
   const [LogInLoading , setLogInLoading] = useState(false)
   const [ScreenLoad,setScreenLoad] = useState(true)
-  const [LogInSuccess, setLogInSuccess] = React.useState(false);
+  const [LogInSuccess, setLogInSuccess] = useState(false);
+  const [CloseInfo,setCloseInfo ] = useState(true);
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -84,7 +84,28 @@ function LogIn() {
         flexDirection: "column",
         position:"relative"
       }}
-    >
+    > 
+
+       <Snackbar open={CloseInfo} onClose={()=>{setCloseInfo(false)}} anchorOrigin={{ vertical :"top" , horizontal: "right" }}>
+        <Alert onClose={()=>{setCloseInfo(false)}} severity="info">
+          <Stack gap={1}>
+          <Stack>
+            <Typography>Demo users</Typography>
+            <Typography sx={{fontWeight:"600",fontSize:"12px"}}>Manufacturer user</Typography>
+            <Typography sx={{fontSize:"12px"}}>Email : jhon@manufacturer.com </Typography>
+            <Typography sx={{fontSize:"12px"}}>Password : 12345678Aa@ </Typography>
+          </Stack>
+          <Stack>
+            <Typography sx={{fontWeight:"600",fontSize:"12px"}}>Transporter user</Typography>
+            <Typography sx={{fontSize:"12px"}}>Email : ben@transporter.com </Typography>
+            <Typography sx={{fontSize:"12px"}}>Password : 12345678Aa@ </Typography>
+          </Stack>
+          <Stack>
+            <Typography sx={{fontSize:"12px"}}>You can also create your account.</Typography>
+          </Stack>
+          </Stack>
+        </Alert>
+       </Snackbar>
 
       <Stack sx={{width:"300px"}} gap={2}> 
         

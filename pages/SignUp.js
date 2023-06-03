@@ -332,6 +332,7 @@ const FinalStepHandle =  async ()=>{
             background: "#F3F3F3",
             padding: "10px 20px",
             borderRadius: "5px",
+            textTransform:"lowercase"
           }}
           placeholder="Example@email.com"
           onChange={(e)=>{setEmail(e.target.value)}}

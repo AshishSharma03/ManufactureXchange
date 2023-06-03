@@ -14,13 +14,15 @@ import {
     Stack,
     TextField,
     Toolbar,
+    Tooltip,
     Typography,
   } from "@mui/material";
   import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useDispatch } from 'react-redux';
 import { logout } from '../Redux/Users/User';
 import { useRouter } from 'next/router';
-function Navbar({userName,lastName}) {
+
+function Navbar({userName,lastName,userType}) {
     const dispatch = useDispatch()
     const router = useRouter()
     const onLogoutHandle = ()=>{
@@ -38,20 +40,23 @@ function Navbar({userName,lastName}) {
     <Toolbar sx={{ display: "flex", gap: "10px" }}>
     <Typography sx={{textTransform:"uppercase",fontWeight:700,fontSize:"20px"}}>Cargo</Typography>
       <span style={{ flex: 1 }} />
-      <Stack direction={"row"} alignItems={"center"} gap={1} sx={{borderRadius:"30px",padding:"5px 9px 5px 5px",color:"#FF9B00",background:"#FFEEBA"}}>
+      <Stack direction={"row"} alignItems={"center"} gap={1} sx={{borderRadius:"30px",padding:"5px 9px 5px 5px",color:"#6291BC",background:"#D1E9FF"}}>
       <Avatar 
-      
-      sx={{background:"#FF9B00",boxShadow:"0px 0px 100px 20px rgba(184, 112, 1 ,0.1)"}}
+        
+      sx={{background:"#7CBFFF",width:24,height:24,fontSize:"10px"}}
       >
         {userName.slice(0,1)}
         {lastName.slice(0,1)}
       </Avatar>
-      <Typography sx={{fontSize:"15px",fontWeight:"700",fontStyle:"italic"}}>{userName+" "+lastName}</Typography>
+      <Typography sx={{fontSize:"15px",fontWeight:"700",fontStyle:"italic"}}>{userName+"@"+userType}</Typography>
      
         </Stack>
+        <Tooltip  arrow title="Log out">
+
         <IconButton sx={{boxShadow:"0px 0px 15px 10px rgba(0,0,0,0.1)"}} onClick={onLogoutHandle}>
           <LogoutRoundedIcon/>
         </IconButton>
+        </Tooltip>
     </Toolbar>
   </AppBar>
   )

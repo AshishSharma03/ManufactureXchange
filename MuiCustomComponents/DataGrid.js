@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, TextField, Stack } from '@mui/material';
+import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -76,27 +77,32 @@ export default function DataGrid({ data, addOrderButton }) {
         {addOrderButton}
       </Stack>
 
-      <TableContainer component={Paper} sx={{ minHeight: '70vh' }}>
+      <TableContainer component={Paper} sx={{ minHeight: '70vh' ,boxShadow:"none"}}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Order ID</TableCell>
-              <TableCell>To</TableCell>
-              <TableCell>From</TableCell>
-              <TableCell>Quantity</TableCell>
-              <TableCell>Cost</TableCell>
-              <TableCell>Created At</TableCell>
+              <TableCell sx={{fontSize:{md:"15px",sm:"12px"},fontWeight:"700",color:"#ccc"}}>Order ID</TableCell>
+              <TableCell sx={{fontSize:{md:"15px",sm:"12px"},fontWeight:"700",color:"#ccc"}}>To</TableCell>
+              <TableCell sx={{fontSize:{md:"15px",sm:"12px"},fontWeight:"700",color:"#ccc"}}>From</TableCell>
+              <TableCell sx={{fontSize:{md:"15px",sm:"12px"},fontWeight:"700",color:"#ccc"}}>Quantity</TableCell>
+              <TableCell sx={{fontSize:{md:"15px",sm:"12px"},fontWeight:"700",color:"#ccc"}}>Cost</TableCell>
+              <TableCell sx={{fontSize:{md:"15px",sm:"12px"},fontWeight:"700",color:"#ccc"}}>Created At</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedRows.map((row) => (
-              <TableRow key={row._id} onClick={() => handleRowClick(row)} style={{ cursor: 'pointer' }} hover>
-                <TableCell>{row.OrderID}</TableCell>
-                <TableCell>{row.To}</TableCell>
-                <TableCell>{row.From}</TableCell>
-                <TableCell>{row.Quantity}</TableCell>
-                <TableCell>{row.cost}</TableCell>
-                <TableCell>{row.createdAt}</TableCell>
+            {paginatedRows.map((row ,i) => (
+              <TableRow key={row._id} onClick={() => handleRowClick(row)} style={{ cursor: 'pointer',background:i%2 == 0 ?"#F9F9F9":"" }} hover>
+                <TableCell sx={{fontSize:{md:"15px",sm:"12px"},fontWeight:"700"}}>{row.OrderID}</TableCell>
+                <TableCell sx={{fontSize:{md:"15px",sm:"12px"}}}>{row.To}</TableCell>
+                <TableCell sx={{fontSize:{md:"15px",sm:"12px"}}}>{row.From}</TableCell>
+                <TableCell sx={{fontSize:{md:"15px",sm:"12px"}}}>{row.Quantity}</TableCell>
+                <TableCell sx={{fontSize:{md:"15px",sm:"12px"},color:"#49B852",fontWeight:"700"}}>{row.cost} RS/-</TableCell>
+                <TableCell sx={{fontSize:{md:"15px",sm:"12px"}}}>
+                  {format(new Date(row.createdAt), 'dd/MM/yyyy')} on  
+                  {format(new Date(row.createdAt), 'dd/MM/yyyy HH:mm') === '12:00'
+                  ? '12:00 PM'
+                  : format(new Date(row.createdAt), ' hh:mm a')} 
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
