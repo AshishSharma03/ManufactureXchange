@@ -11,9 +11,12 @@ import {
   Typography,
   Alert,
   TextField,
+  CircularProgress,
+  Snackbar,
+  Icon,
 } from "@mui/material";
-import React, { useState } from "react";
-import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
+import React, { useEffect, useState } from "react";
+
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { useRouter } from "next/router";
@@ -21,6 +24,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import axios from "axios";
 import Link from "../muiSrc/Link";
+import LoadingScreen from "../Components/LoadingScreen";
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
 const USERTYPE = {
   MENUFECTURE :"Menufecture",
@@ -47,8 +53,22 @@ function SignUp() {
   const [Order,setOrder ] = useState([]);
   const [userType,setUserType ] = useState(USERTYPE.MENUFECTURE);
   const router = useRouter()
+  const [ScreenLoad,setScreenLoad] = useState(true)
   const [userID , setUserId] = useState("")
+  const [LogInLoading , setLogInLoading] = useState(false)
+  const [SignUpSuccess, setSignUpSuccess] = React.useState(false);
+  const [chnageColor, setChnageColor] = React.useState(false);
+
   // const dispatch = useDispatch();
+
+  useEffect(()=>{
+
+    setTimeout(()=>{
+      setScreenLoad(false)
+    },500)
+
+  },[])
+
 
   const SendDataTodb = async () =>{
 
@@ -78,6 +98,7 @@ function SignUp() {
           setErrorMsg("Email is Already exist")
           setError(true)
           setAddressInput(false)
+          setLogInLoading(false)
         } 
     }
 
@@ -94,11 +115,17 @@ const FinalStepHandle =  async ()=>{
     setError(false)   
     const userRegisterd = await SendDataTodb()
     if(userRegisterd){
+      setSignUpSuccess(true)
+      setTimeout(()=>{
+        setChnageColor(true)
+      },100)
+      setLogInLoading(false)
       router.push('/Login')
     }
   }else{
     setErrorMsg("fill all address field")
     setError(true)
+    setLogInLoading(false)
   }
 }
 
@@ -141,6 +168,28 @@ const FinalStepHandle =  async ()=>{
       setError(true)
     }
   
+  }
+
+  if(ScreenLoad){
+
+    return <LoadingScreen/>
+
+  }
+
+  if(SignUpSuccess){
+
+    return <Box sx={{minHeight:"100vh",display:'flex',alignItems:'center',justifyContent:'center',flexDirection:"column"}}>
+    <Stack direction={"row"} alignItems={"center"} gap={1}>
+      <Typography sx={{fontSize:"30px",fontWeight:"700",color:"#484848"}}>Sign Up successfully!</Typography>
+      {chnageColor?
+      <CheckCircleRoundedIcon sx={{fontSize:"30px",color:"#31E040"}}  />
+      :
+      <CheckCircleOutlineRoundedIcon sx={{fontSize:"30px",color:"#ccc"}}  />
+    }
+    </Stack>
+      <Typography sx={{fontSize:"20px",color:'#A1A1A1'}}>User registerd as {userType}.</Typography>
+    </Box>
+
   }
 
   return (
@@ -339,10 +388,16 @@ const FinalStepHandle =  async ()=>{
         </Button>
         <Button
           variant="contained"
-          sx={{ boxShadow: "none", color: "#fff", padding: "10px",display:AddressInput?"block":"none"}}
+          disabled={LogInLoading}
+          sx={{ boxShadow: "none",background:LogInLoading?"#D0D0D0":"" , color: "#fff", padding: "10px",display:AddressInput?"block":"none"}}
           onClick={FinalStepHandle}
-        >
-          Sign in step 2
+        > 
+         {LogInLoading? 
+         <CircularProgress size={"20px"} thickness={5} sx={{color:"#A9A9A9"}} />
+         :
+         "Sign in step 2"
+         } 
+          
         </Button>
         <Stack direction={"row"} gap={1}>
           <Typography sx={{ color: "#ccc" }}>
@@ -351,6 +406,7 @@ const FinalStepHandle =  async ()=>{
           <Link href="/Login">Log in</Link>
         </Stack>
       </Stack>
+     
     </Box>
   );
 }

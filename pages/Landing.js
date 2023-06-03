@@ -22,6 +22,7 @@ import Cookies from "js-cookie";
 import { customAlphabet, nanoid } from "nanoid";
 import axios from "axios";
 import { useRouter } from "next/router";
+import LoadingScreen from "../Components/LoadingScreen";
 
 
 const USERTYPE = {
@@ -38,12 +39,22 @@ function Landing() {
   const [pinCode, setpinCode] = useState()
   const [State, setState] = useState()
   // const [Country, setCountry] = useState()
+  const [ScreenLoad,setScreenLoad] = useState(true)
   const [City, setCity] = useState()
   const [Address, setAddress] = useState()
   const [cargoUsers, setCargoUsers] = useState([]);
   const [Transporter, setTransporter] = useState([]);
 
   const router = useRouter();
+
+  useEffect(()=>{
+
+    setTimeout(()=>{
+      setScreenLoad(false)
+    },500)
+
+  },[])
+
 
   useEffect(() => {
     const userLoggedIn = Cookies.get('UserAuth') === 'true';
@@ -122,6 +133,11 @@ function Landing() {
 
   }
 
+  if(ScreenLoad){
+
+    return <LoadingScreen/>
+
+  }
 
 
   return (
