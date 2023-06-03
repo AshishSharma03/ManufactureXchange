@@ -179,6 +179,7 @@ function Landing() {
       <Box sx={{display:userData?.userType === USERTYPE.TRANSPORTER?"block":"none" , padding: "20px"}}>
       <DataGrid
           data={TransporterData}
+          userType={userData ? userData.userType : ""}
           
         />
 
