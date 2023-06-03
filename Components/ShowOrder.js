@@ -40,16 +40,17 @@ function ShowOrder({OrderDetail,Menufecture,Transporter,userType}) {
 
   const onUpdateCost = async() =>{
     if(isDecimal(costChnage)){
-      setError(false)
       setCost(costChnage)
+      setError(false)
+
       const OrderID = OrderDetail?._id
-      console.log(OrderID)
       try{
-        
+        console.log(costChnage)
         const res = await axios.put(`/api/UpdateOrderByID?id=${OrderID}`,{
-          cost
+          cost : costChnage
         });
         const OrderUpdate = res.data
+        console.log(OrderUpdate)
         setUpdatecostOn(OrderUpdate.updatedAt)
         if(res.status === 200){
           setUpdate(true)
