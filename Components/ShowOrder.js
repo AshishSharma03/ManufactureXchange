@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar'
-import { Alert, Box, Button, CircularProgress, Input, InputAdornment, Snackbar, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, CircularProgress, Divider, Input, InputAdornment, Snackbar, Stack, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import axios from 'axios'
-import { AttachMoney } from '@mui/icons-material';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import { format } from 'date-fns'
 const DataBox = ({lebel,value,direction="row",color}) =>{
   return(
@@ -99,19 +99,22 @@ function ShowOrder({OrderDetail,Menufecture,Transporter,userType}) {
  </Box>)
   }
   return (
-    <Box sx={{background:"",minHeight:"80vh",position:"relative",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column"}}>
+    <Box sx={{background:"",minHeight:"70vh",position:"relative",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column"}}>
       
-      <Stack gap={2} sx={{padding:{md:"20px",sm:"10px",xs:"10px"},marginTop:"10px",boxShadow:"0px 0px 100px 10px rgba(0,0,0,0.1)",borderRadius:"5px"}}>
+      <Stack gap={2} sx={{padding:{md:"20px",sm:"10px",xs:"10px"},marginTop:"10px",marginBottom:{sm:"200px",md:"0px",xs:"200px"},boxShadow:"0px 0px 100px 10px rgba(0,0,0,0.1)",borderRadius:"5px"}}>
       <DataBox lebel={"Id"} value={OrderDetail?.OrderID} />
       <DataBox lebel={"To"} value={OrderDetail?.To} />
       <DataBox lebel={"From"} value={OrderDetail?.From} />
       <DataBox lebel={"Quantity"} value={OrderDetail?.Quantity} />
+      <Divider/>
       <DataBox lebel={"Address"} value={OrderDetail?.Address} direction={"column"} />
+      <Divider/>
       <DataBox lebel={"Menufecture"} value={Menufecture?Menufecture:""} />
       <DataBox lebel={"Transporter"} value={Transporter?Transporter:""} />
       <DataBox lebel={"Created date"} value={formatDateWithTime(createAt)} />
       <DataBox lebel={" cost Update on"} value={formatDateWithTime(updatecostOn)} />
-      <DataBox lebel={"Transport Cost"} value={cost+" "+"Rs/-"}  color={"#78E3A1"}/>
+      <Divider/>
+      
     
       </Stack>
       <Snackbar sx={{position:"absolute",width:"fit-content"}}  open={Update} autoHideDuration={3000} onClose={()=>{setUpdate(false)}} >
@@ -119,14 +122,14 @@ function ShowOrder({OrderDetail,Menufecture,Transporter,userType}) {
         Cost Update to {cost}{" "}Rs/-
       </Alert>
       </Snackbar>
-      <Box sx={{display:userType === "Menufecture" ?"none":"flex",flexDirection:"column",gap:2,marginTop:"20px",padding:"10px",boxShadow:"0px 10px 10px 0px rgba(0,0,0,0.1)"}}>
+      <Box sx={{background:"#fff",position:{md:"initial",sm:"fixed",xs:"fixed"},bottom:0,display:userType === "Menufecture" ?"none":"flex",flexDirection:"column",gap:2,marginTop:"20px",padding:"10px",boxShadow:"0px 10px 10px 0px rgba(0,0,0,0.1)",width:{sm:"100%",xs:"100%",md:"25%"}}}>
       <Alert 
         sx={{display:Error?"stack":"none"}}
         severity="error"
         > 
           {ErrorMsg}
         </Alert>
-    
+      <DataBox lebel={"Transport Cost"} value={cost+" "+"Rs/-"}  color={"#78E3A1"}/>
           <Input 
               sx={{ 
                 background: "#F3F3F3", 
@@ -136,7 +139,7 @@ function ShowOrder({OrderDetail,Menufecture,Transporter,userType}) {
             onChange={(e)=>{setCostChnage(e.target.value)}}
             endAdornment={
               <InputAdornment position="end">
-                <AttachMoney />
+                <CurrencyRupeeIcon />
               </InputAdornment>
             }
           />
