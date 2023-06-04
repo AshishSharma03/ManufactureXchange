@@ -78,7 +78,7 @@ export default function DataGrid({ data, addOrderButton }) {
       <Stack direction="row" gap={1} alignItems="center" >
         <TextField
           label="Search by Order ID"
-          disabled={paginatedRows.length !== 0? false : true }
+      
           value={searchOrderId}
           onChange={handleSearchOrderId}
           style={{ marginBottom: '1rem' }}
@@ -86,7 +86,7 @@ export default function DataGrid({ data, addOrderButton }) {
 
         <TextField
           type="date"
-          disabled={paginatedRows.length !== 0? false : true }
+     
           value={searchDate}
           onChange={handleSearchDate}
           style={{ marginBottom: '1rem' }}
